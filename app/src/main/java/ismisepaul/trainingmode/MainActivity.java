@@ -1,17 +1,22 @@
 package ismisepaul.trainingmode;
 
-import android.accounts.AccountManager;
-import android.accounts.Account;
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.content.Context;
 import android.content.ContentResolver;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Switch;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.util.Log;
+
+import java.lang.reflect.Method;
+
+import static android.provider.Settings.Global.*;
 
 
 public class MainActivity extends Activity {
@@ -55,6 +60,22 @@ public class MainActivity extends Activity {
                 }
                 else
                     setAutoSyncStatus(Boolean.FALSE);
+            }
+        });
+
+        /*Mobile Data */
+        Switch switch_mobileData = (Switch) findViewById(R.id.switch_mobileData);
+        if(getMobileDataStatus()){
+            switch_mobileData.setChecked(getMobileDataStatus());
+        }
+
+        switch_mobileData.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    setMobileDataStatus(Boolean.TRUE);
+                }
+                else
+                    setMobileDataStatus(Boolean.FALSE);
             }
         });
 
@@ -109,6 +130,55 @@ public class MainActivity extends Activity {
     public void setAutoSyncStatus(Boolean setSync){
         Log.d("Setting Auto Sync", setSync.toString());
         ContentResolver.setMasterSyncAutomatically(setSync);
+    }
+
+
+    public boolean getMobileDataStatus(){
+
+        boolean mobileDataEnabled = false; // Assume disabled
+        ConnectivityManager cm = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        try {
+            Class cmClass = Class.forName(cm.getClass().getName());
+            Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
+            method.setAccessible(true); // Make the method callable
+            // get the setting for "mobile data"
+            mobileDataEnabled = (Boolean)method.invoke(cm);
+        } catch (Exception e) {
+            Log.d("Error", "Cannot Access Hidden API");
+        }
+
+        return mobileDataEnabled;
+    }
+
+    public void setMobileDataStatus(Boolean setMobileData){
+
+        TelephonyManager telephonyManager = (TelephonyManager)
+                getSystemService(Context.TELEPHONY_SERVICE);
+
+        try {
+            Class telephonyManagerClass = Class.forName(telephonyManager.getClass().getName());
+            Method getITelephonyMethod = telephonyManagerClass.getDeclaredMethod("getITelephony");
+            getITelephonyMethod.setAccessible(true);
+            Object ITelephonyStub = getITelephonyMethod.invoke(telephonyManager);
+            Class ITelephonyClass = Class.forName(ITelephonyStub.getClass().getName());
+            Method dataConnSwitchmethod = ITelephonyClass.getDeclaredMethod("");
+            dataConnSwitchmethod.setAccessible(true);
+            dataConnSwitchmethod.invoke(ITelephonyStub);
+
+            if (setMobileData) {
+                dataConnSwitchmethod = ITelephonyClass
+                        .getDeclaredMethod("disableDataConnectivity");
+            }
+            else if (!setMobileData) {
+                dataConnSwitchmethod = ITelephonyClass
+                        .getDeclaredMethod("enableDataConnectivity");
+            }
+
+        } catch (Exception e) {
+            Log.e("Error", e.toString());
+        }
+
     }
 
 

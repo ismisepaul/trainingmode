@@ -86,7 +86,7 @@
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/switch3"
+        android:id="@+id/switch_mobileData"
         android:checked="false"
         android:layout_alignBottom="@+id/textView5"
         android:layout_alignParentEnd="true" />
