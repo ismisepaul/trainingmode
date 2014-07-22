@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New ToggleButton"
-        android:id="@+id/toggleButton"
+        android:id="@+id/toggleBtn_everything"
         android:layout_alignParentTop="true"
         android:layout_alignEnd="@+id/view"
         android:checked="false" />
@@ -23,16 +23,16 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Full Training Mode"
         android:id="@+id/textView"
-        android:layout_alignTop="@+id/toggleButton"
+        android:layout_alignTop="@+id/toggleBtn_everything"
         android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/toggleButton"
+        android:layout_alignBottom="@+id/toggleBtn_everything"
         android:gravity="center_vertical" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:layout_below="@+id/toggleButton"
+        android:layout_below="@+id/toggleBtn_everything"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:id="@+id/view" />
@@ -61,7 +61,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Auto-Sync"
         android:id="@+id/textView4"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="28dp"
         android:layout_below="@+id/textView3"
         android:layout_alignParentStart="true" />
 
@@ -79,7 +79,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Mobile Data"
         android:id="@+id/textView5"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="28dp"
         android:layout_below="@+id/textView4"
         android:layout_alignParentStart="true" />
 
@@ -89,42 +89,6 @@
         android:id="@+id/switch_mobileData"
         android:checked="false"
         android:layout_alignBottom="@+id/textView5"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="4G"
-        android:id="@+id/textView6"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/textView5"
-        android:layout_alignParentStart="true" />
-
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/switch4"
-        android:checked="false"
-        android:layout_alignBottom="@+id/textView6"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="3G"
-        android:id="@+id/textView7"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/textView6"
-        android:layout_alignParentStart="true" />
-
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/switch5"
-        android:checked="false"
-        android:layout_alignBottom="@+id/textView7"
         android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
