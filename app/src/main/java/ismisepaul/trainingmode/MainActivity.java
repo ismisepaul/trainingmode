@@ -6,12 +6,11 @@ import android.content.Context;
 import android.content.ContentResolver;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Switch;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.util.Log;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.lang.reflect.Field;
@@ -26,9 +25,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         /* Must create one instance of KeyguardManager and pass to method or it's not
-        * possible to renable the lock screen
-        * http://stackoverflow.com/questions/5773504/reenablekeyguard-not-working*/
-        final KeyguardManager km = (KeyguardManager)getSystemService(Activity.KEYGUARD_SERVICE);
+        * possible to re-enable the lock screen*/
+        final KeyguardManager km = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
         final KeyguardManager.KeyguardLock lock = km.newKeyguardLock(KEYGUARD_SERVICE);
         final Switch switch_lockScreen = (Switch) findViewById(R.id.switch_lockScreen);
         final Switch switch_autoSync = (Switch) findViewById(R.id.switch_autoSync);
@@ -36,45 +34,42 @@ public class MainActivity extends Activity {
         final ToggleButton toggleBtn_mobileData =
                 (ToggleButton) findViewById(R.id.toggleBtn_everything);
 
-
+        /*Get the status of the settings and set the switches on/off accordingly */
         switch_lockScreen.setChecked(getLockScreenStatus(km));
         switch_autoSync.setChecked(getAutoSyncStatus());
         switch_mobileData.setChecked(getMobileDataStatus());
 
-        /*lock screen listener*/
+        /*Lock Screen Switch listener to turn lock screen on/off*/
         switch_lockScreen.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked)
                     setLockScreen(lock, Boolean.TRUE);
-                }
                 else
                     setLockScreen(lock, Boolean.FALSE);
             }
         });
 
-        /*Auto Sync */
+        /*Auto-Sync Switch listener to turn auto-sync on/off*/
         switch_autoSync.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked)
                     setAutoSyncStatus(Boolean.TRUE);
-                }
                 else
                     setAutoSyncStatus(Boolean.FALSE);
             }
         });
 
-        /*Mobile Data */
+        /*Mobile Data Switch listener to turn mobile data on/off*/
         switch_mobileData.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked)
                     setMobileDataStatus(Boolean.TRUE);
-                }
                 else
                     setMobileDataStatus(Boolean.FALSE);
             }
         });
 
-        /*All Settings */
+        /*All Settings Toggle Button Listener*/
         toggleBtn_mobileData.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -85,7 +80,6 @@ public class MainActivity extends Activity {
                     switch_lockScreen.setChecked(Boolean.FALSE);
                     switch_autoSync.setChecked(Boolean.FALSE);
                     switch_mobileData.setChecked(Boolean.FALSE);
-
                 } else {
                     setLockScreen(lock, Boolean.TRUE);
                     setAutoSyncStatus(Boolean.TRUE);
@@ -96,15 +90,14 @@ public class MainActivity extends Activity {
                     switch_mobileData.setChecked(Boolean.TRUE);
                 }
             }
-
-           });
+        });
 
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         /*IF the application is resumed check the status of the settings
-         * lockscreen, autosync and mobiledata */
+         * 'Auto-Sync' and 'Mobile-Data' */
         super.onResume();
 
         final Switch switch_lockScreen = (Switch) findViewById(R.id.switch_lockScreen);
@@ -113,48 +106,30 @@ public class MainActivity extends Activity {
         final ToggleButton toggleBtn_mobileData =
                 (ToggleButton) findViewById(R.id.toggleBtn_everything);
 
-        //Check the status of autosync and mobile data and set the buttons appropriately
+        //Check the status of 'Auto-Sync' and 'Mobile-Data' and set the buttons appropriately
         switch_autoSync.setChecked(getAutoSyncStatus());
         switch_mobileData.setChecked(getMobileDataStatus());
 
         /*On Resume check if all buttons are on/off and set the Full Training mode Toggle
          * to on/off as appropriate */
-        if(!switch_lockScreen.isChecked() && !switch_autoSync.isChecked()
-                && !switch_mobileData.isChecked()){
+        if (!switch_lockScreen.isChecked() && !switch_autoSync.isChecked()
+                && !switch_mobileData.isChecked()) {
             toggleBtn_mobileData.setChecked(Boolean.TRUE);
-            Log.d("Full Training","set");
         }
-
-    }
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-*/
-    /* Return whether the keyguard requires a password to unlock. */
-    public boolean getLockScreenStatus(KeyguardManager km){
+    /*Return the status of the lock screen on/off */
+    public boolean getLockScreenStatus(KeyguardManager km) {
         return km.isKeyguardSecure();
     }
-    public boolean getAutoSyncStatus(){
-        return ContentResolver.getMasterSyncAutomatically();
 
+    /*Return the status of Auto-Sync setting on/off */
+    public boolean getAutoSyncStatus() {
+        return ContentResolver.getMasterSyncAutomatically();
     }
-    public boolean getMobileDataStatus(){
+
+    /*Return the status of Mobile Data setting on/off */
+    public boolean getMobileDataStatus() {
 
         boolean mobileDataEnabled = false; // Assume disabled
         ConnectivityManager cm = (ConnectivityManager)
@@ -164,40 +139,37 @@ public class MainActivity extends Activity {
             Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
             method.setAccessible(true); // Make the method callable
             // get the setting for "mobile data"
-            mobileDataEnabled = (Boolean)method.invoke(cm);
+            mobileDataEnabled = (Boolean) method.invoke(cm);
         } catch (Exception e) {
-            Log.d("Error", "Cannot Access Hidden API");
+            Toast.makeText(getApplicationContext(),
+                    "ERROR: Could not retrieve the status of mobile data" + e.toString(),
+                    Toast.LENGTH_LONG).show();
+            Log.d("ERROR", e.toString());
         }
-
         return mobileDataEnabled;
     }
 
 
-    /* Turn Lock Screen Off. */
-    public void setLockScreen(KeyguardManager.KeyguardLock lock, Boolean lock_screen){
-
-        if(lock_screen) {
-            //Log.d("Setting Lock Screen", "On");
+    /* Turn lock screen setting (require passcode/pattern) on/off. */
+    public void setLockScreen(KeyguardManager.KeyguardLock lock, Boolean lock_screen) {
+        if (lock_screen)
             lock.reenableKeyguard();
-        }
-        else if (!lock_screen){
-            //Log.d("Setting Lock Screen", "Off");
-             lock.disableKeyguard();
-        }
+        else if (!lock_screen)
+            lock.disableKeyguard();
     }
 
-    public void setAutoSyncStatus(Boolean setSync){
-        Log.d("Setting Auto Sync", setSync.toString());
+    /*Turn Auto-Sync Setting on/off */
+    public void setAutoSyncStatus(Boolean setSync) {
         ContentResolver.setMasterSyncAutomatically(setSync);
     }
 
-    public void setMobileDataStatus(Boolean setMobileData){
+    /*Uses Java reflection to access "hidden" API to turn mobile data on/off*/
+    public void setMobileDataStatus(Boolean setMobileData) {
 
         final ConnectivityManager cm = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 
         try {
-
             Class cmClass = Class.forName(cm.getClass().getName());
             Field iConnectivityManagerField = cmClass.getDeclaredField("mService");
             iConnectivityManagerField.setAccessible(true);
@@ -205,16 +177,15 @@ public class MainActivity extends Activity {
             Class iConnectivityManagerClass =
                     Class.forName(iConnectivityManager.getClass().getName());
             Method setMobileDataEnabledMethod =
-                    iConnectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", Boolean.TYPE);
+                    iConnectivityManagerClass.getDeclaredMethod("setMobileDataEnabled",
+                            Boolean.TYPE);
             setMobileDataEnabledMethod.setAccessible(true);
 
             setMobileDataEnabledMethod.invoke(iConnectivityManager, setMobileData);
 
-        }
-        catch (NoSuchMethodException e) {
-            /*The method 'setMobileDataEnabled' been changed
+        } catch (NoSuchMethodException e) {
+            /*The method 'setMobileDataEnabled' been changed in recent versions of Android
              * This catch tries to access the method again in Android 4.4.x */
-
             try {
                 Class[] cArg = new Class[2];
                 cArg[0] = String.class;
@@ -234,13 +205,16 @@ public class MainActivity extends Activity {
                 pArg[1] = setMobileData;
                 setMobileDataEnabledMethod.setAccessible(true);
                 setMobileDataEnabledMethod.invoke(iConnectivityManager, pArg);
+            } catch (Exception ee) {
+                Toast.makeText(getApplicationContext(), "ERROR: Could not set mobile data"
+                        + ee.toString(), Toast.LENGTH_LONG).show();
+                Log.d("ERROR", ee.toString());
             }
-            catch (Exception ee){Log.e("Error", e.toString());}
-
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "ERROR: Could not set mobile data"
+                            + e.toString(), Toast.LENGTH_LONG).show();
+            Log.d("ERROR: ", e.toString());
         }
-        catch (Exception e) {Log.e("Error", e.toString());}
-
     }
-
 
 }
