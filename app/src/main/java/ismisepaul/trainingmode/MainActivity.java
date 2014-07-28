@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.ContentResolver;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.provider.Settings.System;
 import android.widget.Switch;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -31,6 +34,8 @@ public class MainActivity extends Activity {
         final Switch switch_lockScreen = (Switch) findViewById(R.id.switch_lockScreen);
         final Switch switch_autoSync = (Switch) findViewById(R.id.switch_autoSync);
         final Switch switch_mobileData = (Switch) findViewById(R.id.switch_mobileData);
+        final Switch switch_bright = (Switch) findViewById(R.id.switch_bright);
+        final TextView brightness_level = (TextView) findViewById(R.id.textView_bright_level);
         final ToggleButton toggleBtn_mobileData =
                 (ToggleButton) findViewById(R.id.toggleBtn_everything);
 
@@ -38,6 +43,11 @@ public class MainActivity extends Activity {
         switch_lockScreen.setChecked(getLockScreenStatus(km));
         switch_autoSync.setChecked(getAutoSyncStatus());
         switch_mobileData.setChecked(getMobileDataStatus());
+        switch_bright.setChecked(getScreenBrightnessStatus());
+
+        //Set the value of the screen brightness and update the text view
+        brightness_level.setText("(" + getScreenBrightLevel() + ")");
+
 
         /*Lock Screen Switch listener to turn lock screen on/off*/
         switch_lockScreen.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -69,6 +79,19 @@ public class MainActivity extends Activity {
             }
         });
 
+        /*Screen brightness Switch listener to turn auto screen brightness off
+        * the level of the screen to 10 */
+        switch_bright.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    setScreenBrightnessStatus(1, 99);
+                else
+                    setScreenBrightnessStatus(0, 10);
+
+                brightness_level.setText("(" + getScreenBrightLevel() + ")");
+            }
+        });
+
         /*All Settings Toggle Button Listener*/
         toggleBtn_mobileData.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -76,18 +99,22 @@ public class MainActivity extends Activity {
                     setLockScreen(lock, Boolean.FALSE);
                     setAutoSyncStatus(Boolean.FALSE);
                     setMobileDataStatus(Boolean.FALSE);
+                    setScreenBrightnessStatus(0, 10);
 
                     switch_lockScreen.setChecked(Boolean.FALSE);
                     switch_autoSync.setChecked(Boolean.FALSE);
                     switch_mobileData.setChecked(Boolean.FALSE);
+                    switch_bright.setChecked(Boolean.FALSE);
                 } else {
                     setLockScreen(lock, Boolean.TRUE);
                     setAutoSyncStatus(Boolean.TRUE);
                     setMobileDataStatus(Boolean.TRUE);
+                    setScreenBrightnessStatus(1, 100);
 
                     switch_lockScreen.setChecked(Boolean.TRUE);
                     switch_autoSync.setChecked(Boolean.TRUE);
                     switch_mobileData.setChecked(Boolean.TRUE);
+                    switch_bright.setChecked(Boolean.TRUE);
                 }
             }
         });
@@ -103,8 +130,13 @@ public class MainActivity extends Activity {
         final Switch switch_lockScreen = (Switch) findViewById(R.id.switch_lockScreen);
         final Switch switch_autoSync = (Switch) findViewById(R.id.switch_autoSync);
         final Switch switch_mobileData = (Switch) findViewById(R.id.switch_mobileData);
+        final Switch switch_bright = (Switch) findViewById(R.id.switch_bright);
+        final TextView brightness_level = (TextView) findViewById(R.id.textView_bright_level);
         final ToggleButton toggleBtn_mobileData =
                 (ToggleButton) findViewById(R.id.toggleBtn_everything);
+
+        //Set the value of the screen brightness and update the text view
+        brightness_level.setText("(" + getScreenBrightLevel() + ")");
 
         //Check the status of 'Auto-Sync' and 'Mobile-Data' and set the buttons appropriately
         switch_autoSync.setChecked(getAutoSyncStatus());
@@ -144,9 +176,42 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(),
                     "ERROR: Could not retrieve the status of mobile data" + e.toString(),
                     Toast.LENGTH_LONG).show();
-            Log.d("ERROR", e.toString());
+            Log.e("ERROR", e.toString());
         }
         return mobileDataEnabled;
+    }
+    /*Return the True if auto brightness is on and the brightness of the screen
+    * is greater than 10*/
+    public boolean getScreenBrightnessStatus() {
+        int auto_screen_bright;
+        int screen_bright_level;
+
+        try {
+            auto_screen_bright = System.getInt(getContentResolver(),
+                    System.SCREEN_BRIGHTNESS_MODE);
+            screen_bright_level = System.getInt(getContentResolver(),
+                    System.SCREEN_BRIGHTNESS);
+            if (auto_screen_bright == 1 || screen_bright_level > 10)
+                return Boolean.TRUE;
+            else
+                return Boolean.FALSE;
+        } catch(Settings.SettingNotFoundException e){
+            Log.e("Can't get Setting: ", e.toString());
+        }
+
+        return Boolean.FALSE;
+    }
+    /*Get the value of the screen brightness i.e. 0-255 */
+    public String getScreenBrightLevel(){
+        int screen_bright = 2;
+
+        try{
+            screen_bright = System.getInt(getContentResolver(), System.SCREEN_BRIGHTNESS);
+        } catch(Settings.SettingNotFoundException e){
+            Log.e("Can't get Setting: ", e.toString());
+        }
+
+        return Integer.toString(screen_bright);
     }
 
 
@@ -208,13 +273,22 @@ public class MainActivity extends Activity {
             } catch (Exception ee) {
                 Toast.makeText(getApplicationContext(), "ERROR: Could not set mobile data"
                         + ee.toString(), Toast.LENGTH_LONG).show();
-                Log.d("ERROR", ee.toString());
+                Log.e("ERROR", ee.toString());
             }
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "ERROR: Could not set mobile data"
                             + e.toString(), Toast.LENGTH_LONG).show();
-            Log.d("ERROR: ", e.toString());
+            Log.e("ERROR: ", e.toString());
         }
+    }
+
+    /*Set the brightness level on the phone
+     * auto_bright 0=auto brightness is off, 1=auto brightness is on
+      * bright_level 0-255 the level of light from the back light*/
+    public void setScreenBrightnessStatus(int auto_bright, int bright_level) {
+        System.putInt(getContentResolver(), System.SCREEN_BRIGHTNESS_MODE, auto_bright);
+        System.putInt(getContentResolver(),  System.SCREEN_BRIGHTNESS, bright_level);
+
     }
 
 }

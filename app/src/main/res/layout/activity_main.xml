@@ -91,4 +91,32 @@
         android:layout_alignBottom="@+id/textView5"
         android:layout_alignParentEnd="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Screen Brightness"
+        android:id="@+id/textView6"
+        android:layout_marginTop="28dp"
+        android:layout_below="@+id/switch_mobileData"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/switch_bright"
+        android:checked="false"
+        android:layout_alignBottom="@+id/textView6"
+        android:layout_alignStart="@+id/switch_mobileData" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/textView_bright_level"
+        android:layout_toEndOf="@+id/textView6"
+        android:text="00"
+        android:layout_alignTop="@+id/textView6"
+        android:layout_marginLeft="2dp" />
+
 </RelativeLayout>
