@@ -141,6 +141,7 @@ public class MainActivity extends Activity {
         //Check the status of 'Auto-Sync' and 'Mobile-Data' and set the buttons appropriately
         switch_autoSync.setChecked(getAutoSyncStatus());
         switch_mobileData.setChecked(getMobileDataStatus());
+        switch_bright.setChecked(getScreenBrightnessStatus());
 
         /*On Resume check if all buttons are on/off and set the Full Training mode Toggle
          * to on/off as appropriate */
