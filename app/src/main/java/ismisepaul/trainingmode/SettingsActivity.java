@@ -40,6 +40,15 @@ public class SettingsActivity extends PreferenceActivity {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 setListPrefOtherApps(listPref_otherApps, getApplicationContext());
+
+                String packageName = "com.wahoo.fitness";
+                String appName = "Wahoo Fitness";
+
+                TrainingModeDb db = new TrainingModeDb(SettingsActivity.this);
+                db.open();
+                db.create(packageName, appName);
+                db.close();
+
                 return false;
             }
         });
