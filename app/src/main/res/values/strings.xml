@@ -2,7 +2,25 @@
 <resources>
 
     <string name="app_name">Training Mode</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Configure</string>
+
+
+    <!--Settings menu preferences -->
+    <string name="pref_selectTrainingApp">Select Training App</string>
+    <string name="pref_selectOtherApp">Select Other App</string>
+
+    <string-array name="pref_selectTrainingApp_ents">
+        <item>MapMyRide</item>
+        <item>Strava</item>
+        <item>Wahoo Fitness</item>
+    </string-array>
+
+    <string-array name="pref_selectTrainingApp_entVal">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="pref_selectTrainingApp_default">Wahoo Fitness</string>
 
 </resources>

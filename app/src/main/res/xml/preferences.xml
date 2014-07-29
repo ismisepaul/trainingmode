@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="pref_selectTrainingApp"
+        android:title="@string/pref_selectTrainingApp"
+        android:dialogTitle="@string/pref_selectTrainingApp"
+        android:entries="@array/pref_selectTrainingApp_ents"
+        android:entryValues="@array/pref_selectTrainingApp_entVal"
+        android:defaultValue="@string/pref_selectTrainingApp_default"
+        />
+    <ListPreference
+        android:key="pref_selectOtherApp"
+        android:title="@string/pref_selectOtherApp"
+        android:dialogTitle="@string/pref_selectOtherApp"
+    />
+</PreferenceScreen>

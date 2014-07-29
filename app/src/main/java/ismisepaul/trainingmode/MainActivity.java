@@ -4,20 +4,32 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.provider.Settings.System;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.Switch;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.util.Log;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends Activity {
@@ -29,6 +41,7 @@ public class MainActivity extends Activity {
 
         /* Must create one instance of KeyguardManager and pass to method or it's not
         * possible to re-enable the lock screen*/
+        final Button button_start = (Button) findViewById(R.id.button_start);
         final KeyguardManager km = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
         final KeyguardManager.KeyguardLock lock = km.newKeyguardLock(KEYGUARD_SERVICE);
         final Switch switch_lockScreen = (Switch) findViewById(R.id.switch_lockScreen);
@@ -119,6 +132,23 @@ public class MainActivity extends Activity {
             }
         });
 
+
+        //get a list of installed apps.
+
+        button_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent LaunchIntent =
+                        getPackageManager().getLaunchIntentForPackage("com.wahoofitness.fitness");
+                startActivity(LaunchIntent);
+
+                //com.strava
+                //com.mapmyride.android2
+            }
+        });
+
+
     }
 
     @Override
@@ -150,6 +180,29 @@ public class MainActivity extends Activity {
             toggleBtn_mobileData.setChecked(Boolean.TRUE);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        Intent intent = null;
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            intent = new Intent(this,SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     /*Return the status of the lock screen on/off */
     public boolean getLockScreenStatus(KeyguardManager km) {
