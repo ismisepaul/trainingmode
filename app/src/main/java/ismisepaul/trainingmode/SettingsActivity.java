@@ -66,24 +66,6 @@ public class SettingsActivity extends PreferenceActivity {
 
         }
 
-        String[] yo = array_app_names.toArray(new String[array_app_names.size()]);
-        String[] yoyo = array_package_names.toArray(new String[array_package_names.size()]);
-
-        for(int i=0; i < 1; i++){
-            for(int j=0; j < 10; j++){
-                Log.v(yo[j], yoyo[j]);
-            }
-
-        }
-
-        Arrays.sort(yo);
-
-        for(int i=0; i < 1; i++){
-            for(int j=0; j < 10; j++){
-                Log.d("Sorted: "+yo[j], yoyo[j]);
-            }
-
-        }
 
         CharSequence[] entries =
                 array_app_names.toArray(new CharSequence[array_app_names.size()]);
@@ -93,6 +75,19 @@ public class SettingsActivity extends PreferenceActivity {
 
         listPreference.setEntries(entries);
         listPreference.setEntryValues(entryValues);
+
+        /*
+        CharSequence[] sorted_entries;
+        sorted_entries = listPreference.getEntries();
+        Arrays.sort(sorted_entries);
+
+        for(int i=0; i<sorted_entries.length;i++){
+            Log.v("yo", sorted_entries[i].toString());
+        }
+        */
+
+
+
     }
 
 

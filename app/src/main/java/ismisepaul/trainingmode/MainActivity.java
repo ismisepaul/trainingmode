@@ -10,6 +10,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.System;
 import android.view.Menu;
@@ -133,29 +136,33 @@ public class MainActivity extends Activity {
             }
         });
 
-
-        //get a list of installed apps.
-
         button_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                SharedPreferences pref = getSharedPreferences("pref_selectAppToLaunch", MODE_PRIVATE);
-                String test = pref.getString("pref_selectAppToLaunch", null);
+                //get the shared pref for the app on what app to launch
+                String appToLaunch = getShareSetting("pref_selectAppToLaunch");
 
-                Toast.makeText(getApplicationContext(), "The App is: "+ test,
-                        Toast.LENGTH_LONG).show();
+                //if start is pressed and on app is set launch the settings
+                if(appToLaunch != null && appToLaunch != "NULL"){
+                    //inform the user the app is going to be launched
+                    Toast.makeText(getApplicationContext(), "Launching: "+ appToLaunch,
+                            Toast.LENGTH_LONG).show();
 
+                    //launch the chosen application
+                    Intent LaunchIntent =
+                            getPackageManager().getLaunchIntentForPackage(appToLaunch);
+                    startActivity(LaunchIntent);
 
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),
+                            "No Application Set. \nPlease Configure an Application",
+                            Toast.LENGTH_LONG).show();
 
-                /*
-                Intent LaunchIntent =
-                        getPackageManager().getLaunchIntentForPackage("com.wahoofitness.fitness");
-                startActivity(LaunchIntent);
-                */
-
-                //com.strava
-                //com.mapmyride.android2
+                    Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -353,6 +360,22 @@ public class MainActivity extends Activity {
     public void setScreenBrightnessStatus(int auto_bright, int bright_level) {
         System.putInt(getContentResolver(), System.SCREEN_BRIGHTNESS_MODE, auto_bright);
         System.putInt(getContentResolver(),  System.SCREEN_BRIGHTNESS, bright_level);
+
+    }
+
+    public String getShareSetting(String androidKey){
+        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String val = sharedPrefs.getString(androidKey, "NULL");
+        return val;
+
+    }
+
+    public void removeShareSetting(String androidKey){
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+
+        editor.remove(androidKey);
+        editor.apply();
 
     }
 
