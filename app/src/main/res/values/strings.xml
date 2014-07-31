@@ -6,21 +6,7 @@
 
 
     <!--Settings menu preferences -->
-    <string name="pref_selectTrainingApp">Select Training App</string>
-    <string name="pref_selectOtherApp">Select Other App</string>
+    <string name="pref_selectAppToLaunch">Select App to Launch</string>
 
-    <string-array name="pref_selectTrainingApp_ents">
-        <item>MapMyRide</item>
-        <item>Strava</item>
-        <item>Wahoo Fitness</item>
-    </string-array>
-
-    <string-array name="pref_selectTrainingApp_entVal">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
-    <string name="pref_selectTrainingApp_default">Wahoo Fitness</string>
 
 </resources>

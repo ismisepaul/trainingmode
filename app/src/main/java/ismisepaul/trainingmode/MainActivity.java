@@ -5,6 +5,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -139,9 +140,19 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
+                SharedPreferences pref = getSharedPreferences("pref_selectAppToLaunch", MODE_PRIVATE);
+                String test = pref.getString("pref_selectAppToLaunch", null);
+
+                Toast.makeText(getApplicationContext(), "The App is: "+ test,
+                        Toast.LENGTH_LONG).show();
+
+
+
+                /*
                 Intent LaunchIntent =
                         getPackageManager().getLaunchIntentForPackage("com.wahoofitness.fitness");
                 startActivity(LaunchIntent);
+                */
 
                 //com.strava
                 //com.mapmyride.android2
