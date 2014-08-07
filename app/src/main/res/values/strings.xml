@@ -6,7 +6,7 @@
 
 
     <!--Settings menu preferences -->
-    <string name="pref_selectAppToLaunch">Select App to Launch</string>
+    <string name="pref_selectAppToLaunch">Enable Launch App</string>
 
 
 </resources>

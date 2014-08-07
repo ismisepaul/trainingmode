@@ -10,6 +10,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.util.Log;
+import android.view.Menu;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,16 +34,54 @@ public class SettingsActivity extends PreferenceActivity {
                 (ListPreference) findPreference("pref_selectAppToLaunch");
 
         setListPrefLaunchApp(listPref_launchApp, getApplicationContext());
+        setDialogInfo(listPref_launchApp, getApplicationContext());
+        setMenuIcon(listPref_launchApp, getApplicationContext());
+
 
         listPref_launchApp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 setListPrefLaunchApp(listPref_launchApp, getApplicationContext());
+                setMenuIcon(listPref_launchApp, getApplicationContext());
+                setDialogInfo(listPref_launchApp, getApplicationContext());
                 return true;
 
             }
         });
+
+
+
     }
+
+    /*Set the Icon and Name of app on the popup dialog */
+    protected static void setDialogInfo(ListPreference lp, Context context){
+
+        final PackageManager pm = context.getPackageManager();
+        //Set the Dialog title to the currently selected app icon and name
+        try {
+            lp.setDialogIcon(pm.getApplicationIcon(lp.getValue()));
+            lp.setDialogTitle("Selected App " + "\"" + lp.getEntry() + "\"");
+            Log.d("Setting Dialog",lp.getEntry().toString());
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    protected static void setMenuIcon(ListPreference lp, Context context){
+        final PackageManager pm = context.getPackageManager();
+        final String SETTING_LAUNCH_APP_TITLE = "Change Launch App";
+
+        try {
+            lp.setTitle(SETTING_LAUNCH_APP_TITLE);
+            lp.setIcon(pm.getApplicationIcon(lp.getValue()));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 
     protected static void setListPrefLaunchApp(ListPreference listPreference, Context context) {
@@ -64,10 +103,9 @@ public class SettingsActivity extends PreferenceActivity {
                 // User installed applications
                 String label = appInfo.loadLabel(context.getPackageManager()).toString();
                 String packageName = appInfo.packageName;
-                if(label != null) {
-                    mapApps.put(label, packageName);
-                }
 
+                if(label != null)
+                    mapApps.put(label, packageName);
             }
 
         }
@@ -88,7 +126,10 @@ public class SettingsActivity extends PreferenceActivity {
         listPreference.setEntries(cs_app_name);
         listPreference.setEntryValues(cs_package_names);
 
+
     }
+
+
 
 
 }

@@ -3,6 +3,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
         android:key="pref_selectAppToLaunch"
+        android:enabled="true"
         android:title="@string/pref_selectAppToLaunch"
         android:dialogTitle="@string/pref_selectAppToLaunch"
     />
