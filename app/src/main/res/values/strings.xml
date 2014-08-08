@@ -6,7 +6,8 @@
 
 
     <!--Settings menu preferences -->
-    <string name="pref_selectAppToLaunch">Enable Launch App</string>
+    <string name="pref_selectAppToLaunch">Pick an app to launch</string>
+    <string name="pref_dialogSelectApp">Choose an app to launch when beginning a workout</string>
 
 
 </resources>

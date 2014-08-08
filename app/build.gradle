@@ -9,8 +9,8 @@ android {
         applicationId "ismisepaul.trainingmode"
         minSdkVersion 19
         targetSdkVersion 20
-        versionCode 3
-        versionName "1.0"
+        versionCode 4
+        versionName "1.0.1"
 
         applicationVariants.all { variant ->
             def file = variant.outputFile

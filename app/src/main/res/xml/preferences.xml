@@ -5,6 +5,6 @@
         android:key="pref_selectAppToLaunch"
         android:enabled="true"
         android:title="@string/pref_selectAppToLaunch"
-        android:dialogTitle="@string/pref_selectAppToLaunch"
+        android:dialogTitle="@string/pref_dialogSelectApp"
     />
 </PreferenceScreen>

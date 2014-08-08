@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -20,6 +22,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.Switch;
 import android.widget.CompoundButton;
@@ -143,6 +146,7 @@ public class MainActivity extends Activity {
                 //get the shared pref for the app on what app to launch
                 String appToLaunch = getShareSetting("pref_selectAppToLaunch");
 
+
                 //if start is pressed and on app is set launch the settings
                 if(appToLaunch != null && appToLaunch != "NULL"){
                     //inform the user the app is going to be launched
@@ -220,7 +224,6 @@ public class MainActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     /*Return the status of the lock screen on/off */
     public boolean getLockScreenStatus(KeyguardManager km) {
